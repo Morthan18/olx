@@ -1,36 +1,29 @@
 package com.snokant.projekt.Controller;
 
-import com.snokant.projekt.Domain.User;
+import com.snokant.projekt.Domain.Product;
 import com.snokant.projekt.Service.ProductService;
-import com.snokant.projekt.Service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/rest")
-public class PostController {
-    private ProductService productService;
-    private UserService userService;
+public class OtherThingsController {
+    ProductService productService;
 
-    public PostController(UserService userService,ProductService productService) {
-        this.userService = userService;
+    public OtherThingsController(ProductService productService) {
         this.productService = productService;
-
     }
 
-    @PostMapping("user/addUser")
-    public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult) {
-
-        return userService.addNewUser(user,bindingResult);
+    @GetMapping("search/{phrase}")
+    public List<Product> searchByPhrase(@PathVariable String phrase) {
+        return productService.searchByPhrase(phrase);
     }
     @PostMapping("/logout")
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {

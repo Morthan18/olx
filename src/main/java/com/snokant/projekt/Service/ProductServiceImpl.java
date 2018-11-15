@@ -1,5 +1,6 @@
 package com.snokant.projekt.Service;
 
+import com.snokant.projekt.Configuration.SessionUser;
 import com.snokant.projekt.Domain.Category;
 import com.snokant.projekt.Repository.CategoryRepository;
 import com.snokant.projekt.Domain.Product;
@@ -27,13 +28,12 @@ import java.util.*;
 @Service
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
+    private UserRepository userRepository;
 
-
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
-
-
 
     @Override
     public List<Product> getAllByCategory(String category_name) {
@@ -56,12 +56,25 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findXRandomProducts(x, category);
     }
 
+    @Override
+    public List<String> addProduct(Product product, BindingResult bindingResult) {
+        ErrorChecker errorChecker = new ErrorChecker();
+        List<String> errors = errorChecker.checkErrors(product, bindingResult);
+        if (errors == null) {
+            User currentSessionUser = getCurrentSessionUser();
+            if(currentSessionUser!=null){
+                product.setOwner_id(currentSessionUser.getUser_id());
+            }
+            productRepository.save(product);
+            return Arrays.asList("Dodano produkt");
+        }
+        return errors;
+    }
 
-
-
-
-
-
+    public User getCurrentSessionUser(){
+        SessionUser sessionUser = new SessionUser(userRepository);
+        return sessionUser.getCurrentUser();
+    }
 
 
 }

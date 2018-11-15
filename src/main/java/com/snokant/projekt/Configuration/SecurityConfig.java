@@ -19,9 +19,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.queries.users-query}")
     private String usersQuery;
-
-//    @Value("${spring.queries.roles-query}")
-//    private String rolesQuery;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -29,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rest/**").permitAll()
+                .antMatchers("/rest/*").permitAll()
+                .antMatchers("/rest/product/addProduct").hasAnyRole("User","Admin")
                 .antMatchers("/login").permitAll()
                 .antMatchers("/witam").hasAnyRole("User","Admin")
                 .and()

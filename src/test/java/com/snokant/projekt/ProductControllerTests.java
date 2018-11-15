@@ -1,6 +1,6 @@
 package com.snokant.projekt;
 
-import com.snokant.projekt.Controller.GetController;
+import com.snokant.projekt.Controller.ProductController;
 import com.snokant.projekt.Domain.Category;
 import com.snokant.projekt.Repository.CategoryRepository;
 import org.junit.Assert;
@@ -11,15 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class GetControllerTests {
+public class ProductControllerTests {
     @Mock
     CategoryRepository categoryRepository;
     @Autowired
-    GetController getController;
+    ProductController productController;
     @Before
     public void creaTeFakeCategories(){
         Category category = new Category();

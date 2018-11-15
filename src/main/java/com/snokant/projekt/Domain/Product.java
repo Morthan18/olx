@@ -4,9 +4,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -18,15 +21,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long product_id;
+    @NotNull(message = "{empty}")
     private String name;
+    @NotNull(message = "{empty}")
     private String description;
+    @NotNull(message = "{empty}")
     private Integer price;
+    @NotNull(message = "{empty}")
     private Long category_id;
     @Nullable
+    private int owner_id;
+    @Nullable
     private String image;
-    public Product(Long product_id, String name) {
-        this.product_id = product_id;
-        this.name = name;
-    }
+    @CreationTimestamp
+    private LocalDateTime created;
+
 
 }
