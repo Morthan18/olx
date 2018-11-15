@@ -35,14 +35,18 @@ public class ProductController {
         return productService.getAllByCategory(category_name);
     }
 
-    @GetMapping("get/{x}/{category}")
+    @GetMapping("get{x}/{category}")
     public List<Product> fiveProductsByCategory(@PathVariable long x, @PathVariable String category) {
         return productService.getXProductsByCategory(x, category);
     }
     @PostMapping("addProduct")
-    public List<String> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult, HttpSession session) {
-
+    public List<String> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
         return productService.addProduct(product,bindingResult);
+    }
+    @GetMapping("get{x}NewestProducts")
+    public List<Product> findXNewestProducts(@PathVariable int x){
+        return productService.findXNewestProducts(x);
+
     }
 
 

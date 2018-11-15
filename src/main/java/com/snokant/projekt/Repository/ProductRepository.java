@@ -13,5 +13,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findProductByNameContaining(String phrase);
     @Query(value = "SELECT * FROM Products INNER JOIN categories ON products.category_id=categories.category_id where categories.category_name=:category1 ORDER BY RAND() LIMIT :x",nativeQuery = true)
     List<Product> findXRandomProducts(@Param("x") long x,@Param("category1") String category1);
+    @Query(value = "SELECT * from products ORDER BY created DESC LIMIT :d",nativeQuery = true)
+    List<Product> findXNewestProducts(@Param("d") int d);
 
 }

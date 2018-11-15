@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("user/addUser")
-    public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult, HttpSession session) {
+    public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         return userService.addNewUser(user,bindingResult);
     }
 }

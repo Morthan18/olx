@@ -57,6 +57,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findXNewestProducts(int x) {
+        return productRepository.findXNewestProducts(x);
+    }
+
+    @Override
     public List<String> addProduct(Product product, BindingResult bindingResult) {
         ErrorChecker errorChecker = new ErrorChecker();
         List<String> errors = errorChecker.checkErrors(product, bindingResult);

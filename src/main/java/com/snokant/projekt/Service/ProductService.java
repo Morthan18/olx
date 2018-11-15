@@ -22,6 +22,8 @@ public interface ProductService {
     List<Product> searchByPhrase(String phrase);
     @Transactional(readOnly = true)
     List<Product> getXProductsByCategory(Long x, String category);
+    @Transactional(readOnly = true)
+    List<Product> findXNewestProducts(int x);
     @Transactional
     List<String> addProduct(Product product,BindingResult bindingResult);
 

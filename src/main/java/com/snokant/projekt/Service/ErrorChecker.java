@@ -26,7 +26,7 @@ public class ErrorChecker {
             chceckIfEmailExists(object, result);
             return checkIfResultHasErrors(result);
         }else if(object instanceof Product){
-            checkIfResultHasErrors(result);
+            return checkIfResultHasErrors(result);
         }
         return null;
     }
