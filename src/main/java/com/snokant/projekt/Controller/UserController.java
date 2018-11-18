@@ -53,16 +53,14 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(null,null));
 
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+
+        //SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        //String jwt = tokenProvider.generateToken(authentication);
+        //return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        return null;
     }
 }

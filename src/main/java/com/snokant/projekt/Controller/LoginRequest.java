@@ -1,8 +1,7 @@
 package com.snokant.projekt.Controller;
 
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class LoginRequest {
     private String email;
     private String password;
