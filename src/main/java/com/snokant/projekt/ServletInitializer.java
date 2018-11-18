@@ -8,10 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServletInitializer extends SpringBootServletInitializer {
 
-    @GetMapping("/")
-    String d(){
-        return "elo";
-    }
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(SnokantApplication.class);

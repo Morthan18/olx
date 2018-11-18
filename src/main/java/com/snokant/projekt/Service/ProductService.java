@@ -5,7 +5,9 @@ import com.snokant.projekt.Domain.Product;
 import com.snokant.projekt.Domain.User;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,19 +16,15 @@ import static java.lang.Math.min;
 
 
 public interface ProductService {
-    @Transactional(readOnly = true)
     List<Product> getAllByCategory(String category_name);
-    @Transactional(readOnly = true)
     Optional<Product> getProductById(Long id);
-    @Transactional(readOnly = true)
     List<Product> searchByPhrase(String phrase);
-    @Transactional(readOnly = true)
-    List<Product> getXProductsByCategory(Long x, String category);
-    @Transactional(readOnly = true)
+    List<Product> getXProductsByCategory(int x, String category);
     List<Product> findXNewestProducts(int x);
-    @Transactional
-    List<String> addProduct(Product product,BindingResult bindingResult);
-
+    List<Product> findXNewestProductsByCategory(int x,String category);
+    List<String> addProductWithoutImage(Product product,BindingResult bindingResult);
+    List<String> addProductWithImage(Product product, BindingResult bindingResult,MultipartFile file);
+    String addImage(MultipartFile file);
 
 
 

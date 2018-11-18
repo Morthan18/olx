@@ -14,7 +14,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/category/")
 public class CategoryController {
     CategoryService categoryService;
     UserRepository userRepository;
@@ -24,7 +24,7 @@ public class CategoryController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("category/allCategories")
+    @GetMapping("allCategories")
     public List<Category> allCategories() {
         return categoryService.getAllCategories();
     }

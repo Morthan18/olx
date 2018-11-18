@@ -1,15 +1,14 @@
 package com.snokant.projekt.Controller;
 
-import com.snokant.projekt.Domain.Category;
 import com.snokant.projekt.Domain.Product;
-import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Service.CategoryService;
 import com.snokant.projekt.Service.ProductService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,23 +35,33 @@ public class ProductController {
     }
 
     @GetMapping("get{x}/{category}")
-    public List<Product> fiveProductsByCategory(@PathVariable long x, @PathVariable String category) {
+    public List<Product> fiveProductsByCategory(@PathVariable int x, @PathVariable String category) {
         return productService.getXProductsByCategory(x, category);
     }
-    @PostMapping("addProduct")
-    public List<String> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
-        return productService.addProduct(product,bindingResult);
+
+    @PostMapping("addProductWithoutImage")
+    public List<String> addProductWithoutImage(@Valid @RequestBody Product product, BindingResult bindingResult) {
+        return productService.addProductWithoutImage(product, bindingResult);
     }
+    @PostMapping("addProductWithImage")
+    public List<String> addProductWithImage(
+            @RequestParam("image")MultipartFile file,
+            @RequestParam("product") Product product, BindingResult bindingResult ) {
+        return productService.addProductWithImage(product, bindingResult,file);
+    }
+    @PostMapping("dodaj")
+    public String asa(@RequestParam("image") MultipartFile file) {
+        return productService.addImage(file);
+    }
+
     @GetMapping("get{x}NewestProducts")
-    public List<Product> findXNewestProducts(@PathVariable int x){
+    public List<Product> findXNewestProducts(@PathVariable int x) {
         return productService.findXNewestProducts(x);
-
     }
-
-
-
-
-
+    @GetMapping("get{x}NewestProducts/{category}")
+    public List<Product> findXNewestProductsByCategory(@PathVariable int x,@PathVariable String category) {
+        return productService.findXNewestProductsByCategory(x,category);
+    }
 
 
 }

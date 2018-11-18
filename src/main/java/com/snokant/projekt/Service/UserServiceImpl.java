@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public List<String> addNewUser(User user, BindingResult result) throws NullPointerException{
         ErrorChecker errorChecker = new ErrorChecker(userRepository);
@@ -38,27 +39,6 @@ public class UserServiceImpl implements UserService {
         }
         return errors;
     }
-//    private List<String> checkErrors(User user, BindingResult result) {
-//        chceckIfEmailExists(user, result);
-//        return checkIfResultHasErrors(result);
-//    }
-//    private List<String> checkIfResultHasErrors(BindingResult result) {
-//        List<String> errorMessages = new ArrayList<>();
-//        if (result.hasErrors()) {
-//            for (ObjectError object : result.getAllErrors()) {
-//                errorMessages.add(object.getDefaultMessage());
-//            }
-//            return errorMessages;
-//        }
-//        return null;
-//    }
-//
-//    private void chceckIfEmailExists(User user, BindingResult result) {
-//        User existing = userRepository.findUserByEmail(user.getEmail());
-//        if (existing != null) {
-//            result.rejectValue("email", null, "Podany email jest już zajęty");
-//        }
-//    }
     private void authenticateUser(final User user) {
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

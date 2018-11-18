@@ -19,10 +19,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @Service
@@ -52,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getXProductsByCategory(Long x, String category) {
+    public List<Product> getXProductsByCategory(int x, String category) {
         return productRepository.findXRandomProducts(x, category);
     }
 
@@ -62,7 +70,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<String> addProduct(Product product, BindingResult bindingResult) {
+    public List<Product> findXNewestProductsByCategory(int x, String category) {
+        return productRepository.findXNewestProductsByCategory(x,category);
+    }
+
+    @Transactional
+    @Override
+    public List<String> addProductWithoutImage(Product product, BindingResult bindingResult) {
         ErrorChecker errorChecker = new ErrorChecker();
         List<String> errors = errorChecker.checkErrors(product, bindingResult);
         if (errors == null) {
@@ -75,8 +89,49 @@ public class ProductServiceImpl implements ProductService {
         }
         return errors;
     }
+    @Transactional
+    @Override
+    public List<String> addProductWithImage(Product product, BindingResult bindingResult,MultipartFile file) {
+        ErrorChecker errorChecker = new ErrorChecker();
+        List<String> errors = errorChecker.checkErrors(product, bindingResult);
+        if(file==null) {
+            return Arrays.asList("Blad z plikiem");
+        }
 
-    public User getCurrentSessionUser(){
+        if (errors == null) {
+            User currentSessionUser = getCurrentSessionUser();
+            if(currentSessionUser!=null){
+                product.setOwner_id(currentSessionUser.getUser_id());
+            }
+            product.setImage(addImage(file));
+            productRepository.save(product);
+            return Arrays.asList("Dodano produkt");
+        }
+        return errors;
+    }
+
+    private void checkIfFileIsEmpty(MultipartFile file) {
+
+    }
+
+    private final Path rootLocation = Paths.get("krzychokrzysxd");
+
+    public String addImage(MultipartFile file) {
+        File convFile = new File(file.getOriginalFilename());
+        try {
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "HUJNIA";
+        }
+
+        return "OK";
+    }
+
+    private User getCurrentSessionUser(){
         SessionUser sessionUser = new SessionUser(userRepository);
         return sessionUser.getCurrentUser();
     }

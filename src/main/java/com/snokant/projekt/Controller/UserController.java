@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/rest")
+@RequestMapping("/rest/user")
 public class UserController {
     private UserService userService;
 
@@ -21,7 +21,7 @@ public class UserController {
 
     }
 
-    @PostMapping("user/addUser")
+    @PostMapping("addUser")
     public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         return userService.addNewUser(user,bindingResult);
     }
