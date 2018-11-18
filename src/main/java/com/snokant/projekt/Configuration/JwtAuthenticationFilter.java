@@ -9,10 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,8 +24,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Optional;
-
+import java.util.Set;
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -41,13 +46,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 Long userId = tokenProvider.getUserIdFromJWT(jwt);
 
-                /*
-                    Note that you could also encode the user's username and roles inside JWT claims
-                    and create the UserDetails object by parsing those claims from the JWT.
-                    That would avoid the following database hit. It's completely up to you.
-                 */
+
+
+
+
                 Optional<User> userDetails = userRepository.findById(userId);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.get().getRole_id());
+
+
+                Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_User"));
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, grantedAuthorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
