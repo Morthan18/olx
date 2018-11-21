@@ -30,9 +30,10 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
  * @author TTTDEMIRCI
  *
  */
-@Component
+
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
+
 
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -43,6 +44,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
+
         try {
             User creds = new ObjectMapper()
                     .readValue(req.getInputStream(), User.class);
@@ -66,8 +68,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = JWT.create()
                 .withSubject(((User) auth.getPrincipal()).getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1800000))
-                .sign(HMAC512("secretKey".getBytes()));
-        res.addHeader("Authorization", "Bearer " + token);
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME))
+                .sign(HMAC512(JwtConstants.SECRET.getBytes()));
+        res.addHeader(JwtConstants.HEADER_STRING,token);
     }
 }

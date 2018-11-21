@@ -6,6 +6,7 @@ import com.snokant.projekt.Configuration.JwtConfiguration.JwtAuthenticationEntry
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtSuccessHandler;
 import com.snokant.projekt.Service.UserServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +23,25 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    DataSource dataSource;
 
 
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
+    @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
     @Autowired
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private UserServiceImpl userDetailsService;
@@ -44,11 +50,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
+//        auth.jdbcAuthentication().dataSource(dataSource)
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .anyRequest().permitAll()
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/rest/user/signin").permitAll()
                 .antMatchers("/witam").authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
@@ -59,8 +73,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-    }
 }

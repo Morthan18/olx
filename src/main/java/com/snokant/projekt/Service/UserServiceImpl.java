@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     }
     private void authenticateUser(final User user) {
 
+
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
 
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_User"));

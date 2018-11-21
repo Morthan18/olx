@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class Test {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
-    @GetMapping("/login")
+    @GetMapping("/index")
     public String s(){
         return "index.html";
     }

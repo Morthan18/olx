@@ -53,7 +53,7 @@ public class UserController {
         return generator.generate(user);
     }
 
-    @GetMapping("signin")
+    @PostMapping("signin")
     public User index(@RequestBody String email) {
 
         return userService.loadUserByUsername(email);

@@ -7,6 +7,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Date;
+
 /**
  * @author TTTDEMIRCI
  *
@@ -24,13 +26,13 @@ public class JwtGen {
 
         Claims claims = Jwts.claims()
                 .setSubject(jwtUser.getEmail());
-        claims.put("userId", String.valueOf(jwtUser.getUser_id()));
-        claims.put("role", jwtUser.getRole_id());
+        claims.put("role_id", jwtUser.getRole_id());
 
 
         return Jwts.builder()
+                .setExpiration(new Date(System.currentTimeMillis() + 1800000))
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, "fenerbahce")
+                .signWith(SignatureAlgorithm.HS512, JwtConstants.SECRET)
                 .compact();
     }
 }
