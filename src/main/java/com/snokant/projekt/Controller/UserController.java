@@ -1,23 +1,24 @@
 package com.snokant.projekt.Controller;
 
-import com.snokant.projekt.Configuration.JwtTokenProvider;
+import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Repository.RoleRepository;
 import com.snokant.projekt.Repository.UserRepository;
-import com.snokant.projekt.Service.ProductService;
 import com.snokant.projekt.Service.UserService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -25,19 +26,18 @@ import java.util.List;
 @RequestMapping("/rest/user")
 public class UserController {
     private UserService userService;
-
+    @Autowired
+    private JwtGen generator;
     public UserController(UserService userService) {
         this.userService = userService;
 
     }
-
     @PostMapping("addUser")
     public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         return userService.addNewUser(user,bindingResult);
     }
-    @Autowired
-    AuthenticationManager authenticationManager;
-
+    @Value("${security.jwt.secret:JwtSecretKey}")
+    private String secret;
     @Autowired
     UserRepository userRepository;
 
@@ -47,20 +47,16 @@ public class UserController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    JwtTokenProvider tokenProvider;
+    @PostMapping("testuj")
+    public String generate(@RequestBody final User user) {
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(null,null));
-
-
-        //SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        //String jwt = tokenProvider.generateToken(authentication);
-        //return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-        return null;
+        return generator.generate(user);
     }
+
+    @GetMapping("signin")
+    public User index(@RequestBody String email) {
+
+        return userService.loadUserByUsername(email);
+    }
+
 }

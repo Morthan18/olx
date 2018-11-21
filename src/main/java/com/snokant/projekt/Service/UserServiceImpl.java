@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,5 +51,13 @@ public class UserServiceImpl implements UserService {
                         user.getFirst_name(),
                         user.getPassword(),
                         grantedAuthorities));
+    }
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        User applicationUser = userRepository.findUserByEmail(username);
+        if (applicationUser == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new User(applicationUser.getEmail(), applicationUser.getPassword());
     }
 }

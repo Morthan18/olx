@@ -15,6 +15,11 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name = "users")
 public class User {
+    public User(@NotNull(message = "{empty}") @Email(message = "{email.validation}") String email, @NotNull(message = "{empty}") @Size(min = 6, message = "{password}") String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int user_id;
