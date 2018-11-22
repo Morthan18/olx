@@ -1,5 +1,6 @@
 package com.snokant.projekt.Domain;
 
+import javafx.beans.DefaultProperty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

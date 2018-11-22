@@ -7,6 +7,7 @@ import com.snokant.projekt.Configuration.JwtConfiguration.JwtAuthenticationEntry
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtSuccessHandler;
 import com.snokant.projekt.Service.UserServiceImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -54,9 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.jdbcAuthentication().dataSource(dataSource)
-                .passwordEncoder(new BCryptPasswordEncoder())
-                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
+//        auth.jdbcAuthentication().dataSource(dataSource)
+//                .passwordEncoder(new BCryptPasswordEncoder())
+//                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
