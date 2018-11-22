@@ -26,14 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 
-/**
- * @author TTTDEMIRCI
- *
- */
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private AuthenticationManager authenticationManager;
-
 
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -45,6 +40,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
 
+        System.out.println("aut");
         try {
             User creds = new ObjectMapper()
                     .readValue(req.getInputStream(), User.class);

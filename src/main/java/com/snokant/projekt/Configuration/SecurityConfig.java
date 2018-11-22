@@ -1,5 +1,6 @@
 package com.snokant.projekt.Configuration;
 
+//import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthenticationFilter;
 import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthenticationFilter;
 import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthorizationFilter;
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtAuthenticationEntryPoint;
@@ -53,9 +54,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-//        auth.jdbcAuthentication().dataSource(dataSource)
-//                .passwordEncoder(new BCryptPasswordEncoder())
-//                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
+        auth.jdbcAuthentication().dataSource(dataSource)
+                .passwordEncoder(new BCryptPasswordEncoder())
+                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -63,15 +64,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/rest/user/signin").permitAll()
-                .antMatchers("/witam").authenticated()
+                .antMatchers("/rest/user/testuj").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-
 }

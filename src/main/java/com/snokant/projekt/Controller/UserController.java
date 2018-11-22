@@ -1,5 +1,6 @@
 package com.snokant.projekt.Controller;
 
+import com.snokant.projekt.Configuration.JwtConfiguration.JwtConstants;
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Repository.RoleRepository;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -49,14 +51,13 @@ public class UserController {
 
     @PostMapping("testuj")
     public String generate(@RequestBody final User user) {
-
-        return generator.generate(user);
+        return generator.generateToken(user);
     }
 
     @PostMapping("signin")
     public User index(@RequestBody String email) {
 
-        return userService.loadUserByUsername(email);
+        return null;
     }
 
 }

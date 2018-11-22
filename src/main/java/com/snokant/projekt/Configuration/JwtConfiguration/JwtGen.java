@@ -21,16 +21,17 @@ public class JwtGen {
 
 
 
-    public String generate(User jwtUser) {
+    public String generateToken(User jwtUser) {
 
 
         Claims claims = Jwts.claims()
+                .setExpiration(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME))
                 .setSubject(jwtUser.getEmail());
         claims.put("role_id", jwtUser.getRole_id());
 
 
+
         return Jwts.builder()
-                .setExpiration(new Date(System.currentTimeMillis() + 1800000))
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, JwtConstants.SECRET)
                 .compact();

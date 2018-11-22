@@ -2,8 +2,11 @@ package com.snokant.projekt.Configuration.JwtConfiguration;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +21,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
@@ -30,46 +34,41 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(JwtConstants.HEADER_STRING);
+        String token = req.getHeader(JwtConstants.HEADER_STRING);
 
 
-        if (header == null ) {
-            System.out.println("nmi ma");
+        if (token == null) {
             chain.doFilter(req, res);
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(req, res);
+
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String token = request.getHeader(JwtConstants.HEADER_STRING);
         if (token != null) {
-            // parse the token.
-           // String user = JWT.require(Algorithm.HMAC512("secretKey".getBytes()))
-                 //   .build()
-                  //  .verify(token)
-                    //.verify(token.replace("Bearer ", ""))
-                  //  .getSubject();
-
-            Claims claims = Jwts.parser()
-                    .setSigningKey(JwtConstants.SECRET)
-                    .parseClaimsJws(token).getBody();
-            System.out.println("ID: " + claims.getId());
-            System.out.println("Subject: " + claims.getSubject());
-            System.out.println("Issuer: " + claims.getIssuer());
-            System.out.println("Expiration: " + claims.getExpiration());
-
-            //System.out.println(user1);
-
+            Claims claims = validateToken(token);
             if (claims != null) {
                 return new UsernamePasswordAuthenticationToken(claims, null, new ArrayList<>());
             }
             return null;
         }
         return null;
+    }
+
+    private Claims validateToken(String token) {
+        Claims claims = null;
+        try {
+            return Jwts.parser()
+                    .setSigningKey(JwtConstants.SECRET)
+                    .parseClaimsJws(token).getBody();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
