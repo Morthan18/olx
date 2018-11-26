@@ -23,18 +23,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 import java.util.Collections;
 
+@Order(1)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     DataSource dataSource;
+
+
 
 
     @Bean
@@ -48,16 +52,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private UserServiceImpl userDetailsService;
 
-    public SecurityConfig(UserServiceImpl userDetailsService) {
+    public AdapterJWTSecurityConfig(UserServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-//        auth.jdbcAuthentication().dataSource(dataSource)
-//                .passwordEncoder(new BCryptPasswordEncoder())
-//                .usersByUsernameQuery("SELECT email,password,true FROM users where email=?");
+    protected void configure(AuthenticationManagerBuilder auth){
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,8 +65,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/rest/user/signin").permitAll()
-                .antMatchers("/rest/user/testuj").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().hasIpAddress("192.168.0.8")
+                .anyRequest().hasIpAddress("127.0.0.1")
+                .anyRequest().permitAll()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))

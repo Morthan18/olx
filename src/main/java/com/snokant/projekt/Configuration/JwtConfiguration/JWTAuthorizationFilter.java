@@ -3,10 +3,7 @@ package com.snokant.projekt.Configuration.JwtConfiguration;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.crypto.MacProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +35,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
 
         if (token == null) {
-            chain.doFilter(req, res);
+            try {
+                chain.doFilter(req, res);
+            }catch (JwtException e){
+                System.out.println(e.getMessage());
+            }
             return;
         }
 

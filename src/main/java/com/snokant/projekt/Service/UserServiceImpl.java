@@ -10,11 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 @Service
@@ -26,7 +28,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     @Transactional
     @Override
     public List<String> addNewUser(User user, BindingResult result) throws NullPointerException{
@@ -35,23 +36,10 @@ public class UserServiceImpl implements UserService {
         if (errors == null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-            authenticateUser(user);
+            //authenticateUser(user);
             return Arrays.asList("Zarejestrowano");
         }
         return errors;
-    }
-    private void authenticateUser(final User user) {
-
-
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_User"));
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        user.getFirst_name(),
-                        user.getPassword(),
-                        grantedAuthorities));
     }
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {

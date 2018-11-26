@@ -48,7 +48,8 @@ public class User {
     @NotNull(message = "{empty}")
     private boolean newsletter;
 
-    @NotNull(message = "{empty}")
-    private int role_id;
+    @Column(name="role_id", nullable=false, length=1,
+            updatable=false, insertable=false)
+    private int role_id=1;
 
 }

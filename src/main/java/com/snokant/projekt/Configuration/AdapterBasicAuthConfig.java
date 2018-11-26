@@ -11,21 +11,23 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.sql.DataSource;
-@Order(1)
+
 @Configuration
-public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
+public class AdapterBasicAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     DataSource dataSource;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-
                 .httpBasic()
                 .and()
-                .authorizeRequests().antMatchers("/witam").permitAll()
-                .antMatchers("/rest/user/testuj").hasAnyRole("ROLE_User","ROLE_Admin");
-               // .and().logout();
+                .authorizeRequests()
+                //.antMatchers("/rest/user/signin").hasAnyRole("User", "Admin")
+                .anyRequest().permitAll()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
 
@@ -34,7 +36,6 @@ public class BasicAuthConfig extends WebSecurityConfigurerAdapter {
         auth.jdbcAuthentication().dataSource(dataSource)
                 .passwordEncoder(new BCryptPasswordEncoder())
                 .usersByUsernameQuery("SELECT email,password,true FROM users where email=?")
-
                 .authoritiesByUsernameQuery("SELECT users.email,roles.role_name FROM users INNER JOIN roles ON users.role_id=roles.role_id WHERE users.email=?");
     }
 }

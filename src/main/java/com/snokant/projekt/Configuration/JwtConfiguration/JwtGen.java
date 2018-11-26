@@ -1,5 +1,7 @@
 package com.snokant.projekt.Configuration.JwtConfiguration;
+
 import com.snokant.projekt.Domain.User;
+import com.snokant.projekt.Domain.UserRequestLogin;
 import org.springframework.stereotype.Component;
 
 
@@ -11,7 +13,6 @@ import java.util.Date;
 
 /**
  * @author TTTDEMIRCI
- *
  */
 
 
@@ -19,17 +20,11 @@ import java.util.Date;
 public class JwtGen {
 
 
-
-
-    public String generateToken(User jwtUser) {
-
-
+    public String generateToken(UserRequestLogin jwtUser) {
         Claims claims = Jwts.claims()
                 .setExpiration(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME))
                 .setSubject(jwtUser.getEmail());
-        claims.put("role_id", jwtUser.getRole_id());
-
-
+        claims.put("password", jwtUser.getPassword());
 
         return Jwts.builder()
                 .setClaims(claims)
