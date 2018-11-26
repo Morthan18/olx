@@ -20,11 +20,9 @@ import java.util.List;
 @RequestMapping("/rest/user/")
 public class UserController {
     private UserService userService;
-    private JwtGen generator;
 
-    public UserController(UserService userService, JwtGen generator) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.generator = generator;
     }
 
     @PostMapping("addUser")
@@ -34,6 +32,6 @@ public class UserController {
 
     @PostMapping("signIn")
     public List<String> generate(@Valid @RequestBody UserRequestLogin user) {
-        return Arrays.asList(generator.generateToken(user));
+        return userService.signIn(user);
     }
 }

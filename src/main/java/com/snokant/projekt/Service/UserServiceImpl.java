@@ -1,32 +1,29 @@
 package com.snokant.projekt.Service;
 
+import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Domain.User;
+import com.snokant.projekt.Domain.UserRequestLogin;
 import com.snokant.projekt.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+    private JwtGen generator;
 
-    public UserServiceImpl(UserRepository userRepository) {
+
+    public UserServiceImpl(UserRepository userRepository, JwtGen generator) {
         this.userRepository = userRepository;
+        this.generator = generator;
     }
     @Transactional
     @Override
@@ -48,5 +45,21 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException(username);
         }
         return new User(applicationUser.getEmail(), applicationUser.getPassword());
+    }
+
+    @Override
+    public List<String> signIn(UserRequestLogin user) {
+        User userInDb = userRepository.findUserByEmail(user.getEmail());
+
+
+        if(userInDb!=null&& (matchPasswords(user.getPassword(),userInDb.getPassword()))){
+
+            return Arrays.asList("TA",generator.generateToken(user));
+        }
+        return Arrays.asList("Podaj prawidłowy email lub hasło");
+    }
+    private boolean matchPasswords(String password, String password2){
+
+            return passwordEncoder.matches(password, password2);
     }
 }

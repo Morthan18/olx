@@ -28,8 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 import java.util.Collections;
-
-@Order(1)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
@@ -61,18 +59,17 @@ public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/rest/user/signin").permitAll()
-                .anyRequest().hasIpAddress("192.168.0.8")
-                .anyRequest().hasIpAddress("127.0.0.1")
-                .anyRequest().permitAll()
+        http.antMatcher("/rest/**").authorizeRequests()
+                    .antMatchers("/rest/user/signIn/").permitAll()
+                .anyRequest().authenticated()
+
+
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
+               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
+//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .csrf().disable()
+
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 }
