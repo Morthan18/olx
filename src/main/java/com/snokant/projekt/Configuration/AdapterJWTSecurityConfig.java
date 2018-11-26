@@ -22,12 +22,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.sql.DataSource;
 import java.util.Collections;
+
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
@@ -48,29 +51,22 @@ public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private UserServiceImpl userDetailsService;
-
-    public AdapterJWTSecurityConfig(UserServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth){
     }
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("signIn").permitAll()
+                .antMatchers(HttpMethod.POST,"/signIn").permitAll()
                 .anyRequest().authenticated()
-
-//
                 .and()
+                .csrf().disable()
+                //.and()
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
 //               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 ////                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
 //
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.csrf().disable();
     }
 }
