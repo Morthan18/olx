@@ -5,6 +5,7 @@ import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Domain.UserRequestLogin;
 import com.snokant.projekt.Service.UserService;
+import org.springframework.core.annotation.Order;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 

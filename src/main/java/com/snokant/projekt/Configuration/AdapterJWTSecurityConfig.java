@@ -59,17 +59,18 @@ public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/rest/**").authorizeRequests()
-                    .antMatchers("/rest/user/signIn/").permitAll()
+        http.authorizeRequests()
+                .antMatchers("signIn").permitAll()
                 .anyRequest().authenticated()
 
-
+//
                 .and()
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
-               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
-//                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .csrf().disable()
+//               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
+////                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
+//
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf().disable();
     }
 }
