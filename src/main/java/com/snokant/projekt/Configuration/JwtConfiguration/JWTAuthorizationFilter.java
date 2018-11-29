@@ -37,7 +37,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (token == null) {
             try {
                 chain.doFilter(req, res);
-            }catch (JwtException e){
+            } catch (JwtException e) {
                 System.out.println(e.getMessage());
             }
             return;

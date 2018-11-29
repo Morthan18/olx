@@ -27,46 +27,71 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.token.ConsumerTokenServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.sql.DataSource;
 import java.util.Collections;
-
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
-@Configuration
-public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
+//@Configuration
+public class AdapterJWTSecurityConfig {
 
-    @Autowired
-    DataSource dataSource;
+    @Configuration
+    public static class config extends WebSecurityConfigurerAdapter{
+//        @Override
+//        protected void configure(AuthenticationManagerBuilder auth){
+//        }
+//        @Bean
+//        @Override
+//        public AuthenticationManager authenticationManagerBean() throws Exception {
+//            return super.authenticationManagerBean();
+//        }
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                   // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                   // .and()
+                   // .csrf().disable()
+                    //.httpBasic().disable()
+                   // .cors()
+                   // .and()
+                    //.anonymous().and()
+                    .authorizeRequests().antMatchers(HttpMethod.POST).permitAll()
+                    .anyRequest().permitAll();
+                   // .and()
 
 
+                    //.addFilter(new JWTAuthorizationFilter(authenticationManagerBean()));
 
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-
-    @Autowired
-    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth){
-    }
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/signIn").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .csrf().disable()
-                //.and()
-                .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
 //               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
 ////                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 
 //
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        }
+
     }
+
+//    @Order(1)
+//    @Configuration
+//    public static class config2 extends WebSecurityConfigurerAdapter{
+//        protected void configure(HttpSecurity http) throws Exception {
+//
+//
+//        }
+//
+//    }
+    @Autowired
+    DataSource dataSource;
+    @Autowired
+    JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+
+
+
+
+
+
+
+
+
+
 }

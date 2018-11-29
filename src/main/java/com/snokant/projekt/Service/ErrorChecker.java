@@ -45,7 +45,7 @@ public class ErrorChecker {
         if(object instanceof User) {
             User existing = userRepository.findUserByEmail(((User) object).getEmail());
             if (existing != null) {
-                result.rejectValue("email", null, "Podany email jest już zajęty");
+                result.rejectValue("email", "BLAD", "Podany email jest już zajęty");
             }
         }
     }

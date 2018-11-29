@@ -27,12 +27,15 @@ public class UserController {
     }
 
     @PostMapping("addUser")
-    public List<String> addUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public List<String> addUser(@Valid @RequestBody User user,BindingResult bindingResult) {
         return userService.addNewUser(user, bindingResult);
     }
 
-    @PostMapping("signIn")
-    public List<String> generate(@Valid @RequestBody UserRequestLogin user) {
-        return userService.signIn(user);
+    @GetMapping("signIn")
+    public List<String> generate(
+           // @Valid @RequestBody UserRequestLogin user
+    ) {
+        //return userService.signIn(user);
+        return Arrays.asList("hj");
     }
 }

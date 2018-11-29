@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Long product_id;
     @NotNull(message = "{empty}")
     private String name;

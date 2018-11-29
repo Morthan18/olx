@@ -1,40 +1,28 @@
 package com.snokant.projekt.Service;
 
-import com.snokant.projekt.Configuration.SessionUser;
-import com.snokant.projekt.Domain.Category;
-import com.snokant.projekt.Repository.CategoryRepository;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
+import com.snokant.projekt.Configuration.JwtConfiguration.JwtConstants;
 import com.snokant.projekt.Domain.Product;
 import com.snokant.projekt.Repository.ProductRepository;
-import com.snokant.projekt.Repository.RoleRepository;
 import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Repository.UserRepository;
-import com.snokant.projekt.Service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    public static final String imagesDirectoryPath = "C:/xampp/htdocs/erdupko zdjecia/";
     private ProductRepository productRepository;
     private UserRepository userRepository;
 
@@ -71,70 +59,58 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findXNewestProductsByCategory(int x, String category) {
-        return productRepository.findXNewestProductsByCategory(x,category);
+        return productRepository.findXNewestProductsByCategory(x, category);
     }
 
     @Transactional
     @Override
-    public List<String> addProductWithoutImage(Product product, BindingResult bindingResult) {
+    public List<String> addProduct(Product product, BindingResult bindingResult, MultipartFile file, String token) {
         ErrorChecker errorChecker = new ErrorChecker();
         List<String> errors = errorChecker.checkErrors(product, bindingResult);
+        if (file == null) {
+            errors.add("BLAD");
+            errors.add("Blad z plikiem");
+            return errors;
+        }
         if (errors == null) {
-            User currentSessionUser = getCurrentSessionUser();
-            if(currentSessionUser!=null){
+            String s = savedFilePath(file);
+            if (s != null) {
+                User currentSessionUser = getCurrentSessionUser(token);
                 product.setOwner_id(currentSessionUser.getUser_id());
+
+                product.setImage(savedFilePath(file));
+
+                productRepository.save(product);
+                return Arrays.asList("GIT","Dodano produkt");
             }
-            productRepository.save(product);
-            return Arrays.asList("Dodano produkt");
         }
         return errors;
     }
 
-    @Transactional
-    @Override
-    public List<String> addProductWithImage(Product product, BindingResult bindingResult,MultipartFile file) {
-        ErrorChecker errorChecker = new ErrorChecker();
-        List<String> errors = errorChecker.checkErrors(product, bindingResult);
-        if(file==null) {
-            return Arrays.asList("Blad z plikiem");
-        }
 
-        if (errors == null) {
-            User currentSessionUser = getCurrentSessionUser();
-            if(currentSessionUser!=null){
-                product.setOwner_id(currentSessionUser.getUser_id());
-            }
-            product.setImage(addImage(file));
-            productRepository.save(product);
-            return Arrays.asList("Dodano produkt");
-        }
-        return errors;
-    }
+    private String savedFilePath(MultipartFile multipartFile) {
 
-    private void checkIfFileIsEmpty(MultipartFile file) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+        String filenameWithDate = dateFormat.format(new Date()) + "~" + multipartFile.getOriginalFilename();
+        String finalFileName = imagesDirectoryPath + filenameWithDate;
 
-    }
-
-    private final Path rootLocation = Paths.get("krzychokrzysxd");
-
-    public String addImage(MultipartFile file) {
-        File convFile = new File(file.getOriginalFilename());
+        File file = new File(finalFileName);
         try {
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(file.getBytes());
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(multipartFile.getBytes());
             fos.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            return "HUJNIA";
+            return e.getMessage();
         }
-
-        return "OK";
+        return finalFileName;
     }
 
-    private User getCurrentSessionUser(){
-        SessionUser sessionUser = new SessionUser(userRepository);
-        return sessionUser.getCurrentUser();
+    private User getCurrentSessionUser(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(JwtConstants.SECRET)
+                .parseClaimsJws(token).getBody();
+        return userRepository.findUserByEmail(claims.get("email").toString());
     }
 
 

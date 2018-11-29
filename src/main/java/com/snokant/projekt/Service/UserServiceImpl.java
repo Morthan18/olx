@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
             //authenticateUser(user);
-            return Arrays.asList("Zarejestrowano");
+            return Arrays.asList("GIT","Zarejestrowano");
         }
         return errors;
     }
@@ -54,9 +54,9 @@ public class UserServiceImpl implements UserService {
 
         if(userInDb!=null&& (matchPasswords(user.getPassword(),userInDb.getPassword()))){
 
-            return Arrays.asList("TA",generator.generateToken(user));
+            return Arrays.asList("GIT",generator.generateToken(user));
         }
-        return Arrays.asList("Podaj prawidłowy email lub hasło");
+        return Arrays.asList("BLAD","Podaj prawidłowy email lub hasło");
     }
     private boolean matchPasswords(String password, String password2){
 

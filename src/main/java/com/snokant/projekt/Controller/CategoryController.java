@@ -1,16 +1,11 @@
 package com.snokant.projekt.Controller;
 
 import com.snokant.projekt.Domain.Category;
-import com.snokant.projekt.Domain.User;
 import com.snokant.projekt.Repository.UserRepository;
 import com.snokant.projekt.Service.CategoryService;
-import com.snokant.projekt.Configuration.SessionUser;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
