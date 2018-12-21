@@ -2,11 +2,8 @@ package com.snokant.projekt.ControllersTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snokant.projekt.Controller.ProductController;
-import com.snokant.projekt.Model.Domain.ProductDomain;
 import com.snokant.projekt.Model.Product;
 import com.snokant.projekt.Model.User;
-import com.snokant.projekt.Repository.ProductRepository;
-import com.snokant.projekt.Repository.UserRepository;
 import com.snokant.projekt.Service.ProductServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,21 +16,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,14 +34,6 @@ public class ProductControllerTests {
     private ProductController productController;
     @Mock
     private ProductServiceImpl productService;
-    @Mock
-    private ProductRepository productRepository;
-    @Mock
-    private UserRepository userRepository;
-    @Mock
-    BindingResult bindingResult;
-    @Mock
-    MultipartFile multipartFile;
 
     private String productJSONObject = "{\"name\":\"Twoja matka\",\"description\":\"testowe\",\"price\":123,\"categoryId\":3}";
     private String productJSONArray =

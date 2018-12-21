@@ -1,44 +1,25 @@
 package com.snokant.projekt.ServicesTests;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-
-import com.snokant.projekt.Configuration.JwtConfiguration.JwtConstants;
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Model.Product;
 import com.snokant.projekt.Model.User;
-import com.snokant.projekt.Model.Domain.UserDomain;
-import com.snokant.projekt.Repository.ProductRepository;
 import com.snokant.projekt.Repository.UserRepository;
 import com.snokant.projekt.Service.ProductServiceImpl;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTests {
     @InjectMocks
     private ProductServiceImpl productService;
-    @Mock
-    private ProductRepository productRepository;
     @Mock
     private UserRepository userRepository;
 

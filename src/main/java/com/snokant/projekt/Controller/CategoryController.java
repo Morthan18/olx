@@ -1,11 +1,12 @@
 package com.snokant.projekt.Controller;
 
 import com.snokant.projekt.Model.Category;
-import com.snokant.projekt.Repository.UserRepository;
 import com.snokant.projekt.Service.CategoryService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @CrossOrigin(origins = "*")

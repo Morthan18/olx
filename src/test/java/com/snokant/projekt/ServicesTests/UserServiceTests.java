@@ -1,20 +1,12 @@
 package com.snokant.projekt.ServicesTests;
 
-import com.snokant.projekt.Configuration.JwtConfiguration.JwtGen;
 import com.snokant.projekt.Model.User;
 import com.snokant.projekt.Repository.UserRepository;
 import com.snokant.projekt.Service.UserServiceImpl;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
@@ -28,8 +20,6 @@ public class UserServiceTests {
     UserServiceImpl userService;
     @Mock
     UserRepository userRepository;
-    @Mock
-    BCryptPasswordEncoder passwordEncoder;
 
     @Test
     public void addUserTest() {

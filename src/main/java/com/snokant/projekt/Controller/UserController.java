@@ -4,7 +4,6 @@ import com.snokant.projekt.Model.User;
 import com.snokant.projekt.Service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;

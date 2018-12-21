@@ -1,10 +1,6 @@
 package com.snokant.projekt.Service;
 
-import com.snokant.projekt.Model.Product;
 import com.snokant.projekt.Model.User;
-import com.snokant.projekt.Model.Domain.UserDomain;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
 

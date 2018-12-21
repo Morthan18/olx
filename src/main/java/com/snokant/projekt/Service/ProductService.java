@@ -5,8 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static java.lang.Math.min;
-
 
 public interface ProductService {
     List<Product> getAllProductsByCategory(Long category);
