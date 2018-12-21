@@ -1,7 +1,7 @@
 package com.snokant.projekt.Configuration.JwtConfiguration;
 
-import com.snokant.projekt.Domain.User;
-import com.snokant.projekt.Domain.UserRequestLogin;
+import com.snokant.projekt.Model.Domain.UserDomain;
+import com.snokant.projekt.Model.User;
 import org.springframework.stereotype.Component;
 
 
@@ -20,7 +20,7 @@ import java.util.Date;
 public class JwtGen {
 
 
-    public String generateToken(UserRequestLogin jwtUser) {
+    public String generateToken(User jwtUser) {
         Claims claims = Jwts.claims()
                 .setExpiration(new Date(System.currentTimeMillis() + JwtConstants.EXPIRATION_TIME))
                 .setSubject(jwtUser.getEmail());

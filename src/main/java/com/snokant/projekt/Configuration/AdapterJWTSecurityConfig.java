@@ -1,6 +1,7 @@
 package com.snokant.projekt.Configuration;
 
 //import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthenticationFilter;
+
 import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthenticationFilter;
 import com.snokant.projekt.Configuration.JwtConfiguration.JWTAuthorizationFilter;
 import com.snokant.projekt.Configuration.JwtConfiguration.JwtAuthenticationEntryPoint;
@@ -31,67 +32,45 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.sql.DataSource;
 import java.util.Collections;
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
-//@Configuration
-public class AdapterJWTSecurityConfig {
+@Configuration
+public class AdapterJWTSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Configuration
-    public static class config extends WebSecurityConfigurerAdapter{
-//        @Override
-//        protected void configure(AuthenticationManagerBuilder auth){
-//        }
-//        @Bean
-//        @Override
-//        public AuthenticationManager authenticationManagerBean() throws Exception {
-//            return super.authenticationManagerBean();
-//        }
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                   // .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                   // .and()
-                   // .csrf().disable()
-                    //.httpBasic().disable()
-                   // .cors()
-                   // .and()
-                    //.anonymous().and()
-                    .authorizeRequests().antMatchers(HttpMethod.POST).permitAll()
-                    .anyRequest().permitAll();
-                   // .and()
-
-
-                    //.addFilter(new JWTAuthorizationFilter(authenticationManagerBean()));
-
-//               // .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
-////                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-
-//
-        }
-
-    }
-
-//    @Order(1)
-//    @Configuration
-//    public static class config2 extends WebSecurityConfigurerAdapter{
-//        protected void configure(HttpSecurity http) throws Exception {
-//
-//
-//        }
-//
-//    }
-    @Autowired
-    DataSource dataSource;
     @Autowired
     JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+    }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-
-
-
-
-
-
-
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .cors()
+                .and()
+                .authorizeRequests()
+                .anyRequest().permitAll()
+                //.anyRequest().access("hasIpAddress('192.168.0.') and isAuthenticated()")
+                .antMatchers("/rest/product/addProduct",
+                        "/rest/product/modifyProduct/{id}",
+                        "rest/product/myProducts").authenticated()
+                //.anyRequest().access("hasIpAddress('0:0:0:0:0:0:0:1') and  isAuthenticated()")
+                .and()
+                .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.headers().cacheControl();
+        http.httpBasic().authenticationEntryPoint(jwtAuthenticationEntryPoint);
+    }
 
 }
+

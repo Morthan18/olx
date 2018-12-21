@@ -15,34 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Enumeration;
-
 @Component
-@ControllerAdvice
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    @Autowired
-    UserController userController;
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException {
+        System.out.println("asdasd");
 
-        response.setContentType("image/gif");
-        String filepath = "C:/Users/Krzys/Desktop/snokant/gif.gif";
-        OutputStream out = response.getOutputStream();
-        InputStream in = new FileInputStream(new File(filepath));
-        try {
-            copy(in, out);
-        }finally{
-            in.close();
-        }
-        out.close();
-    }
-    public void copy(final InputStream in, final OutputStream out) throws IOException {
-        byte[] buffer = new byte[1024];
-        int count;
-
-        while ((count = in.read(buffer)) != -1) {
-            out.write(buffer, 0, count);
-        }
-        out.flush();
     }
 
 }

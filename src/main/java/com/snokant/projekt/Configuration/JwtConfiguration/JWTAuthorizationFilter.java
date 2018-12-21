@@ -38,7 +38,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             try {
                 chain.doFilter(req, res);
             } catch (JwtException e) {
-                System.out.println(e.getMessage());
+                System.out.println("HUJ");
             }
             return;
         }
