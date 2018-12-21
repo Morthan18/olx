@@ -129,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
             return "HUJNIA";
         }
 
-        return "OK";
+        return "OK";HUJ
     }
 
     private User getCurrentSessionUser(){
