@@ -1,38 +1,27 @@
 package com.snokant.projekt.Controller;
 
-import com.snokant.projekt.Domain.Category;
-import com.snokant.projekt.Domain.User;
-import com.snokant.projekt.Repository.UserRepository;
+import com.snokant.projekt.Model.Category;
 import com.snokant.projekt.Service.CategoryService;
-import com.snokant.projekt.Configuration.SessionUser;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/rest/category/")
 public class CategoryController {
-    CategoryService categoryService;
-    UserRepository userRepository;
+    private CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService, UserRepository userRepository) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.userRepository = userRepository;
     }
 
     @GetMapping("allCategories")
     public List<Category> allCategories() {
         return categoryService.getAllCategories();
     }
-//    @GetMapping("/token")
-//    public Map<String,String> token(HttpSession session) {
-//        return Collections.singletonMap("token", session.getId());
-//    }
-
-
 }
 

@@ -1,10 +1,8 @@
 package com.snokant.projekt.Configuration.JwtConfiguration;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.crypto.MacProvider;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,11 +12,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
@@ -37,8 +32,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (token == null) {
             try {
                 chain.doFilter(req, res);
-            }catch (JwtException e){
-                System.out.println(e.getMessage());
+            } catch (JwtException e) {
+                System.out.println("HUJ");
             }
             return;
         }

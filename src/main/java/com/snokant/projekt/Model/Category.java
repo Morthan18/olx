@@ -1,4 +1,4 @@
-package com.snokant.projekt.Domain;
+package com.snokant.projekt.Model;
 
 import lombok.Data;
 import lombok.Getter;
@@ -14,8 +14,14 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Category {
+    public Category(Long categoryId, String categoryName) {
+        this.categoryName = categoryName;
+        this.categoryId = categoryId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long category_id;
-    private String category_name;
+    private Long categoryId;
+    private String categoryName;
+    private String iconName;
 }

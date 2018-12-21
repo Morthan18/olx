@@ -1,17 +1,22 @@
 package com.snokant.projekt.Service;
 
-import com.snokant.projekt.Domain.User;
-import com.snokant.projekt.Domain.UserRequestLogin;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
+import com.snokant.projekt.Model.User;
 
 import java.util.List;
 
 
 public interface UserService {
-    List<String> addNewUser(User user, BindingResult result);
-    User loadUserByUsername(String username) throws UsernameNotFoundException;
-    List<String> signIn(UserRequestLogin user);
+    List<String> addNewUser(User user);
+
+    List<String> logIn(User user);
+
+    List<String> modifyProfile(User user, String token);
+
+    User getUserDetails(String token);
+
+    List<String> sendRequestForPhoneNumber(int userIdThatPhoneNumberIWant, String token);
+
+    List<User> getMyRequestList(String token);
+
+    List<String> acceptRequestPhone(String token, int userId);
 }

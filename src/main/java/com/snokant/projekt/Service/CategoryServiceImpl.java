@@ -1,6 +1,6 @@
 package com.snokant.projekt.Service;
 
-import com.snokant.projekt.Domain.Category;
+import com.snokant.projekt.Model.Category;
 import com.snokant.projekt.Repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
