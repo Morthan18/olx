@@ -1,2 +1,2 @@
-# kopia-olx
-Jest to jedynie strona backendowa aplikacji webowej, frontend znajduje się: https://github.com/Shirahotsu
+# Olx - my first spring boot application
+Backend side of olx-like application. You can find frontent side at: https://github.com/Shirahotsu
